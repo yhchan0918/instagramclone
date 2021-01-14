@@ -34,6 +34,7 @@ const Feed = () => {
   return (
     <FlatList
       data={data}
+      keyExtractor={(item, index) => index.toString()}
       renderItem={({item}) => <Post post={item} />}
       ListHeaderComponent={Stories}
     />
