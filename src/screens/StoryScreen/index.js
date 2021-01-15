@@ -1,11 +1,15 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, SafeAreaView} from 'react-native';
+import {useRoute} from '@react-navigation/native';
 
 const StoryScreen = () => {
+  const route = useRoute();
+  console.log(route);
   return (
-    <View>
-      <Text>awesome story</Text>
-    </View>
+    <SafeAreaView>
+      <Text>Awesome story</Text>
+    </SafeAreaView>
   );
 };
 

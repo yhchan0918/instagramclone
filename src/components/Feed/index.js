@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList} from 'react-native';
 import Post from '../Post';
-import Stories from '../Stories';
+import UserStoriesPreview from '../UserStoriesPreview';
 
 const data = [
   {
@@ -36,7 +36,7 @@ const Feed = () => {
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({item}) => <Post post={item} />}
-      ListHeaderComponent={Stories}
+      ListHeaderComponent={UserStoriesPreview}
     />
   );
 };
