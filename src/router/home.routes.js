@@ -5,7 +5,6 @@ import logo from '../assets/images/logo.png';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import {Image, View} from 'react-native';
-import StoryScreen from '../screens/StoryScreen';
 
 const HomeStack = createStackNavigator();
 

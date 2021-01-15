@@ -36,6 +36,7 @@ const Feed = () => {
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({item}) => <Post post={item} />}
+      showsVerticalScrollIndicator={false}
       ListHeaderComponent={UserStoriesPreview}
     />
   );
