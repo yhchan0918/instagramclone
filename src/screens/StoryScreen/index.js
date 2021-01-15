@@ -9,10 +9,11 @@ import {
   Dimensions,
 } from 'react-native';
 import {useRoute, useNavigation} from '@react-navigation/native';
+import {API, graphqlOperation} from 'aws-amplify';
 import Feather from 'react-native-vector-icons/Feather';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
-import storiesData from '../../data/stories';
+import {listStorys} from '../../graphql/queries';
 import styles from './styles';
 import ProfilePicture from '../../components/ProfilePicture';
 import {TextInput} from 'react-native-gesture-handler';
@@ -21,16 +22,24 @@ const StoryScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const userId = route.params.userId;
-  const [userStories, setUserStories] = useState(null);
+  const [stories, setStories] = useState(null);
   const [activeStoryindex, setActiveStoryindex] = useState(null);
 
   useEffect(() => {
-    const userStories = storiesData.find(
-      (storyData) => storyData.user.id === userId,
-    );
-    setUserStories(userStories);
+    fetchStories();
+
     setActiveStoryindex(0);
   }, []);
+
+  const fetchStories = async () => {
+    try {
+      const stories = await API.graphql(graphqlOperation(listStorys));
+
+      setStories(stories.data.listStorys.items);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handlePress = (evt) => {
     const x = evt.nativeEvent.locationX;
@@ -44,45 +53,34 @@ const StoryScreen = () => {
   };
 
   const handleNextStory = () => {
-    if (activeStoryindex >= userStories.stories.length - 1) {
-      navigateToNextUser();
+    if (activeStoryindex >= stories.length - 1) {
       return;
     }
     setActiveStoryindex(activeStoryindex + 1);
   };
   const handlePrevStory = () => {
     if (activeStoryindex <= 0) {
-      navigateToPrevUser();
       return;
     }
     setActiveStoryindex(activeStoryindex - 1);
   };
 
-  const navigateToPrevUser = () => {
-    navigation.push('Story', {userId: (parseInt(userId) - 1).toString()});
-  };
-  const navigateToNextUser = () => {
-    navigation.push('Story', {userId: (parseInt(userId) + 1).toString()});
-  };
-
-  if (!userStories) {
+  if (!stories) {
     return (
       <SafeAreaView>
         <ActivityIndicator />
       </SafeAreaView>
     );
   }
-  const activeStory = userStories.stories[activeStoryindex];
+  const activeStory = stories[activeStoryindex];
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={handlePress}>
-        <ImageBackground
-          style={styles.image}
-          source={{uri: activeStory.imageUri}}>
+        <ImageBackground style={styles.image} source={{uri: activeStory.image}}>
           <View style={styles.userInfo}>
-            <ProfilePicture uri={userStories.user.imageUri} size={50} />
-            <Text style={styles.username}> {userStories.user.name}</Text>
-            <Text style={styles.postedTime}> {activeStory.postedTime}</Text>
+            <ProfilePicture uri={activeStory.user.image} size={50} />
+            <Text style={styles.username}> {activeStory.user.name}</Text>
+            <Text style={styles.postedTime}> {activeStory.createdAt}</Text>
           </View>
           <View style={styles.bottomContainer}>
             <View style={styles.cameraButton}>

@@ -1,39 +1,29 @@
-import React from 'react';
-import {View, Text, FlatList} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {FlatList} from 'react-native';
+import {API, graphqlOperation} from 'aws-amplify';
+
 import Post from '../Post';
 import UserStoriesPreview from '../UserStoriesPreview';
-
-const data = [
-  {
-    user: {
-      imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvHmLQOHTgLSKQxq-zWXVNxdEV9J9YKQ_Jdg&usqp=CAU',
-      name: 'Diaoge',
-    },
-    imageUri:
-      'https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-    caption: 'Beautiful city lol',
-    likesCount: 11,
-    postedAt: '6 minutes ago',
-  },
-  {
-    user: {
-      imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvHmLQOHTgLSKQxq-zWXVNxdEV9J9YKQ_Jdg&usqp=CAU',
-      name: 'Diaoge',
-    },
-    imageUri:
-      'https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-    caption: 'Beautiful city lol',
-    likesCount: 11,
-    postedAt: '6 minutes ago',
-  },
-];
+import {listPosts} from '../../graphql/queries';
 
 const Feed = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+  const fetchPosts = async () => {
+    try {
+      const posts = await API.graphql(graphqlOperation(listPosts));
+
+      setPosts(posts.data.listPosts.items);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
   return (
     <FlatList
-      data={data}
+      data={posts}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({item}) => <Post post={item} />}
       showsVerticalScrollIndicator={false}
