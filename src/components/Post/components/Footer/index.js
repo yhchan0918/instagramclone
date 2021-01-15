@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableWithoutFeedback} from 'react-native';
+import moment from 'moment';
 import ADIcon from 'react-native-vector-icons/AntDesign';
 import FontistoIcon from 'react-native-vector-icons/Fontisto';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+
 import styles from './styles';
 
 const Footer = ({likesCount: likesCountProp, caption, postedAt}) => {
@@ -43,7 +45,7 @@ const Footer = ({likesCount: likesCountProp, caption, postedAt}) => {
 
       <Text style={styles.likes}>{likesCount} Likes</Text>
       <Text style={styles.caption}>{caption}</Text>
-      <Text style={styles.postedAt}>{postedAt}</Text>
+      <Text style={styles.postedAt}>{moment(postedAt).fromNow()}</Text>
     </View>
   );
 };

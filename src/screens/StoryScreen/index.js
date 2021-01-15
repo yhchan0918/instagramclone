@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
+import moment from 'moment';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {API, graphqlOperation} from 'aws-amplify';
 import Feather from 'react-native-vector-icons/Feather';
@@ -20,8 +21,6 @@ import {TextInput} from 'react-native-gesture-handler';
 
 const StoryScreen = () => {
   const route = useRoute();
-  const navigation = useNavigation();
-  const userId = route.params.userId;
   const [stories, setStories] = useState(null);
   const [activeStoryindex, setActiveStoryindex] = useState(null);
 
@@ -80,7 +79,9 @@ const StoryScreen = () => {
           <View style={styles.userInfo}>
             <ProfilePicture uri={activeStory.user.image} size={50} />
             <Text style={styles.username}> {activeStory.user.name}</Text>
-            <Text style={styles.postedTime}> {activeStory.createdAt}</Text>
+            <Text style={styles.postedTime}>
+              {moment(activeStory.createdAt).fromNow()}
+            </Text>
           </View>
           <View style={styles.bottomContainer}>
             <View style={styles.cameraButton}>
